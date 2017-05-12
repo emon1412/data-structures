@@ -6,23 +6,52 @@ var HashTable = function() {
 };
 
 HashTable.prototype.insert = function(k, v) {
+
   var index = getIndexBelowMaxForKey(k, this._limit);
-  this._storage.set(index, v);
+  
+  if (!Array.isArray(this._storage.get(index))) {
+    this._storage.set(index, []);
+  }
+  
+  // get storage at index and store it to a var
+  var bucket = this._storage.get(index);
+  // push that to variable
+  
+  if (this.retrieve(k)) {
+    _.each(bucket, function(sub, i) {
+      if (sub[0] === k) { sub[1] = v; }
+    });
+  } else {
+    bucket.push([k, v]);
+  }
+  // set to new variable
+  this._storage.set(index, bucket);
+  
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  return this._storage.get(index);
+
+  var bucket = this._storage.get(index);
+  
+  for (var i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === k) {
+      return bucket[i][1];
+    }
+  }
 
 };
 
 HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  this._storage.each(function(item, i, arr) {
-    if (index === i){
-      this._storage.set(index, undefined)
+  
+  var bucket = this._storage.get(index);
+   
+  for (var i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === k ) {
+      bucket.splice(i, 1);
     }
-  }, this);
+  }
 };
 
 
@@ -31,7 +60,3 @@ HashTable.prototype.remove = function(k) {
  * Complexity: What is the time complexity of the above functions?
  */
 
-// let b = new HashTable()
-// b.insert('Minh', 'SC')
-// console.log(JSON.stringify(b._storage))
-// // console.log(b)

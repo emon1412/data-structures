@@ -23,6 +23,7 @@ var LimitedArray = function(limit) {
     checkLimit(index);
     // console.log(storage, index, value)
     storage[index] = value;
+  //  console.log(storage);
   };
   limitedArray.each = function(callback) {
     for (var i = 0; i < storage.length; i++) {
