@@ -1,6 +1,7 @@
 var BinarySearchTree = function(value) {
   var obj = Node(value);
-  
+  // var obj = Objectcreate(BST)
+    
   return obj;
 };
 var BSTMethods = {};
@@ -9,7 +10,6 @@ BSTMethods.insert = function(value, node) {
   var newNode = Node(value);
   
   node = node || this;
-  
   
   if (value < node.value) {
     if (node.left === null) {

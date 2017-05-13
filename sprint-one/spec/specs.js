@@ -68,7 +68,13 @@ define([
         stack.push('b');
         expect(stack.pop()).to.equal('b');
       });
-
+      
+      it('allows sequentially removing and adding items', function() {
+        stack.push('a');
+        stack.pop('a')
+        stack.push('b')
+        expect(stack.pop()).to.equal('b');
+      });
     });
 
     describe('stack-specific behavior', function() {

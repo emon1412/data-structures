@@ -40,5 +40,12 @@ describe('tree', function() {
     expect(tree.contains(7)).to.equal(true);
     expect(tree.contains(8)).to.equal(true);
   });
+  
+  it('should have correct parent property', function() {
+    tree.addChild(6);
+    tree.addChild(7);
+    tree.children[0].addChild(8);
+    expect(tree.children[0].children[0].parent).to.eql(tree.children[0]);
+  });
 
 });
