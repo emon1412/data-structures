@@ -1,8 +1,5 @@
 // Instantiate a new graph
 var Graph = function() {
-  // var graph = Object.create(Graph.prototype);
-  
-  // return graph;
 };
 
 

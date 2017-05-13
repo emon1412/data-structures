@@ -13,7 +13,6 @@ HashTable.prototype.insert = function(k, v) {
   if (!Array.isArray(this._storage.get(index))) {
     this._storage.set(index, []);
   }
-  
   // get storage at index and store it to a var
   var bucket = this._storage.get(index);
   // push that to variable
@@ -27,10 +26,15 @@ HashTable.prototype.insert = function(k, v) {
   }
   // set to new variable
   this._storage.set(index, bucket);
-  
   this.numberFilled++;
-  console.log('numberfilled is', this.numberFilled);
   
+  if (this.numberFilled / this._limit >= 0.75) {
+    this.doubleSize();
+  }
+  
+  
+  
+
 };
 
 HashTable.prototype.retrieve = function(k) {
@@ -38,12 +42,13 @@ HashTable.prototype.retrieve = function(k) {
 
   var bucket = this._storage.get(index);
   
-  for (var i = 0; i < bucket.length; i++) {
-    if (bucket[i][0] === k) {
-      return bucket[i][1];
+  if (Array.isArray(bucket)) {
+    for (var i = 0; i < bucket.length; i++) {
+      if (bucket[i][0] === k) {
+        return bucket[i][1];
+      }
     }
   }
-
 };
 
 HashTable.prototype.remove = function(k) {
@@ -58,35 +63,53 @@ HashTable.prototype.remove = function(k) {
   }
   
   this.numberFilled--;
+  
+  if (this.numberFilled / this._limit < 0.25) {
+    this.halfSize();
+  }
+
+
 };
 
-HashTable.prototype.resize = function() {
+HashTable.prototype.doubleSize = function() {
+  this._limit = this._limit * 2;
+  // assigns a variable "newStorage" to a LimitedArray(this._limit * 2)
+  var newHashTable = new HashTable(this._limit);
+  // put contents of this._storage into the variable newStorage
+  this._storage.each(function(item, i) {
+    if (Array.isArray(item)) {
+      _.each(item, function(keyVal) {
+        newHashTable.insert(keyVal[0], keyVal[1]);
+      });
+    }
+  });
+   
+  // reassign this._storage to equal newStorage
+  // this._storage = newStorage  
+  
+  this._storage = newHashTable._storage;
   
 };
-var c = new HashTable()
-var b = new HashTable();
-b.insert('Minh', 'SC')
-b.insert('Jeremy', 'DOTA2')
-b._storage.each(function(item, i) {
-  if (Array.isArray(item)) {
-    _.each(item, function(keyVal) {
-      c.insert(keyVal[0], keyVal[1])
-    })
-    // console.log('found array', item);
-  }
-});
 
-var newB = LimitedArray(8);
-
-newB.set(7, 'wer');
-newB.set(3, 'sdf');
-newB.set(2, 'hello');
-newB.set(3, 'sdsdfs');
-// newB.each(function(bucket) {
-//   console.log(['key', bucket]);
-// });
-
-console.log(b.numberFilled)
+HashTable.prototype.halfSize = function() {
+  this._limit = this._limit / 2;
+  // assigns a variable "newStorage" to a LimitedArray(this._limit * 2)
+  var newHashTable = new HashTable(this._limit);
+  // put contents of this._storage into the variable newStorage
+  this._storage.each(function(item, i) {
+    if (Array.isArray(item)) {
+      _.each(item, function(keyVal) {
+        newHashTable.insert(keyVal[0], keyVal[1]);
+      });
+    }
+  });
+   
+  // reassign this._storage to equal newStorage
+  // this._storage = newStorage  
+  
+  this._storage = newHashTable._storage;
+};
+  
 
 /*
  * Complexity: What is the time complexity of the above functions?
