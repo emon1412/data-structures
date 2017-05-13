@@ -1,8 +1,10 @@
 
 
-var HashTable = function() {
-  this._limit = 8;
+var HashTable = function(limit) {
+  this._limit = limit || 8;
   this._storage = LimitedArray(this._limit);
+  //this.filled = 0 - 8
+  this.numberFilled = 0;
 };
 
 HashTable.prototype.insert = function(k, v) {
@@ -25,6 +27,9 @@ HashTable.prototype.insert = function(k, v) {
   }
   // set to new variable
   this._storage.set(index, bucket);
+  
+  this.numberFilled++;
+  console.log('numberfilled is', this.numberFilled);
   
 };
 
@@ -51,9 +56,37 @@ HashTable.prototype.remove = function(k) {
       bucket.splice(i, 1);
     }
   }
+  
+  this.numberFilled--;
 };
 
+HashTable.prototype.resize = function() {
+  
+};
+var c = new HashTable()
+var b = new HashTable();
+b.insert('Minh', 'SC')
+b.insert('Jeremy', 'DOTA2')
+b._storage.each(function(item, i) {
+  if (Array.isArray(item)) {
+    _.each(item, function(keyVal) {
+      c.insert(keyVal[0], keyVal[1])
+    })
+    // console.log('found array', item);
+  }
+});
 
+var newB = LimitedArray(8);
+
+newB.set(7, 'wer');
+newB.set(3, 'sdf');
+newB.set(2, 'hello');
+newB.set(3, 'sdsdfs');
+// newB.each(function(bucket) {
+//   console.log(['key', bucket]);
+// });
+
+console.log(b.numberFilled)
 
 /*
  * Complexity: What is the time complexity of the above functions?
